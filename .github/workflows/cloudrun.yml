@@ -1,0 +1,50 @@
+name: Deploy to Google Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Configure Docker for Google Artifact Registry
+        run: gcloud auth configure-docker
+
+      - name: Build and push Docker image
+        run: |
+          IMAGE_NAME=review-summarizzer
+          REGION=${{ secrets.GCP_REGION }}
+          PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}
+          IMAGE_URI=$REGION-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/$IMAGE_NAME:latest
+          docker build -t $IMAGE_URI .
+          docker push $IMAGE_URI
+        env:
+          DOCKER_BUILDKIT: 1
+
+      - name: Deploy to Cloud Run
+        run: |
+          IMAGE_NAME=review-summarizzer
+          REGION=${{ secrets.GCP_REGION }}
+          PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}
+          IMAGE_URI=$REGION-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/$IMAGE_NAME:latest
+          gcloud run deploy $IMAGE_NAME \
+            --image $IMAGE_URI \
+            --region $REGION \
+            --platform managed \
+            --allow-unauthenticated \
+            --set-env-vars OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
+            --min-instances=0 \
+            --max-instances=1 \
+            --port=8080 
