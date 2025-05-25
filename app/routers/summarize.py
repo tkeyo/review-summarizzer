@@ -25,7 +25,7 @@ router = APIRouter()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Configure dspy with the OpenAI model
-dspy_lm = dspy.LM('openai/gpt-4o-mini', api_key=OPENAI_API_KEY)
+dspy_lm = dspy.LM('openai/gpt-4o-nano', api_key=OPENAI_API_KEY)
 dspy.configure(lm=dspy_lm)
 
 # Load the optimized summarizer
@@ -56,11 +56,7 @@ async def summarize_reviews(request: SummarizeRequest) -> SummarizeResponse:
     # Format reviews as markdown list
     reviews_md = "\n\n".join(f"# User review {i+1}\n{r.review}" for i, r in enumerate(request.reviews))
     try:
-        # Run the blocking LLM call in a thread pool to keep FastAPI async
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            summary = await asyncio.get_event_loop().run_in_executor(
-                executor, summarize_reviews_sync, reviews_md
-            )
+        summary = summarize_reviews_sync(reviews_md)
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"LLM summarization failed: {e}")
-    return SummarizeResponse(summary=summary) 
+    return SummarizeResponse(summary=summary)
