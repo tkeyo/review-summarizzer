@@ -20,7 +20,7 @@
 - **Asynchronous Programming:** Prefer `async` and `await`
 - **Web Framework:** `fastapi`
 - **Demo Framework:** `gradio`, `streamlit`
-- **LLM Framework:** `langchain`, `transformers`
+- **LLM Framework:** `langchain`, `transformers`, `dspy.ai`, `pydantic-ai`
 - **Vector Database:** `faiss`, `chroma` (optional)
 - **Experiment Tracking:** `mlflow`, `tensorboard` (optional)
 - **Hyperparameter Optimization:** `optuna`, `hyperopt` (optional)
@@ -103,3 +103,6 @@
 - **If a request is unclear or lacks sufficient information, ask clarifying questions before proceeding.**
 - **Always consider the security implications of your code, especially when dealing with user inputs and external data.**
 - **Actively use and promote best practices for the specific tasks at hand (LLM app development, data cleaning, demo creation, etc.).**
+
+# Contract on how we work together
+- If you have any ambiguity about your task you will ask clarifying questions
