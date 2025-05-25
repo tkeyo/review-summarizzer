@@ -1,0 +1,28 @@
+{
+  "summarize": {
+    "traces": [],
+    "train": [],
+    "demos": [],
+    "signature": {
+      "instructions": "Summarize the provided user reviews to maximize purchase intent.\n# Role\nYou are an expert review summarizer. You know what makes people tick and buy when they read a review summary.\n# Instructions\n- Summarize the provided reviews\n- Adjust the format so that people are more likely to purchase",
+      "fields": [
+        {
+          "prefix": "Reviews:",
+          "description": "All user reviews as a markdown list."
+        },
+        {
+          "prefix": "Summary:",
+          "description": "A persuasive summary of the reviews."
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.11",
+      "dspy": "2.6.24",
+      "cloudpickle": "3.1"
+    }
+  }
+}
