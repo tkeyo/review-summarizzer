@@ -1,5 +1,6 @@
 import os
 import dspy
+from app.llm.language import SupportedLanguage
 
 # Path to the optimized summarizer
 OPTIMIZED_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../prompt/optimized_summarizer.json'))
@@ -18,9 +19,11 @@ class SummarizeSignature(dspy.Signature):
     # Instructions
     - Summarize the provided reviews
     - Adjust the format so that people are more likely to purchase
+    - Provide the summary in the specified language
     """
     reviews = dspy.InputField(desc="All user reviews as a markdown list.")
-    summary = dspy.OutputField(desc="A persuasive summary of the reviews.")
+    language = dspy.InputField(desc="The language code for the output summary (cs = czech or sk = slovak).")
+    summary = dspy.OutputField(desc="A persuasive summary of the reviews in the specified language.")
 
 
 class ReviewSummarizer(dspy.Module):
@@ -28,31 +31,35 @@ class ReviewSummarizer(dspy.Module):
     def __init__(self) -> None:
         self.summarize = dspy.Predict(SummarizeSignature)
 
-    def forward(self, reviews: str) -> dspy.Prediction:
+    def forward(self, reviews: str, language: str | SupportedLanguage) -> dspy.Prediction:
         """
-        Summarize the provided reviews.
+        Summarize the provided reviews in the specified language.
 
         Args:
             reviews (str): All user reviews as a markdown list.
+            language (str | SupportedLanguage): The desired output language code.
 
         Returns:
             dspy.Prediction: The prediction containing the summary.
         """
-        return self.summarize(reviews=reviews)
+        # Handle both string and enum inputs
+        lang_code = language.value if isinstance(language, SupportedLanguage) else language
+        return self.summarize(reviews=reviews, language=lang_code)
 
 # Singleton instance of the summarizer
 summarizer = ReviewSummarizer()
 summarizer.load(path=OPTIMIZED_PATH)
 
-def summarize_reviews_sync(reviews_md: str) -> str:
+def summarize_reviews_sync(reviews_md: str, language: SupportedLanguage) -> str:
     """
     Call the DSPy summarizer synchronously.
 
     Args:
         reviews_md (str): All user reviews as a markdown list.
+        language (SupportedLanguage): The desired output language.
 
     Returns:
-        str: The persuasive summary of the reviews.
+        str: The persuasive summary of the reviews in the specified language.
     """
-    result = summarizer(reviews=reviews_md)
+    result = summarizer(reviews=reviews_md, language=language)
     return result.summary 
