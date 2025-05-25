@@ -2,13 +2,9 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 from typing import List
 import os
-import dspy
-import concurrent.futures
 import asyncio
-from app.signatures import SummarizeSignature
+from app.signatures.review_summarizer import summarize_reviews_sync
 
-# Path to the optimized summarizer
-OPTIMIZED_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../prompt/optimized_summarizer.json'))
 
 class Review(BaseModel):
     review: str = Field(..., description="A single user review.")
@@ -21,27 +17,6 @@ class SummarizeResponse(BaseModel):
 
 router = APIRouter()
 
-# Placeholder for OpenAI API key (replace with your actual key or set as env var)
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-# Configure dspy with the OpenAI model
-dspy_lm = dspy.LM('openai/gpt-4o-nano', api_key=OPENAI_API_KEY)
-dspy.configure(lm=dspy_lm)
-
-# Load the optimized summarizer
-class ReviewSummarizer(dspy.Module):
-    def __init__(self):
-        self.summarize = dspy.Predict(SummarizeSignature)
-    def forward(self, reviews: str):
-        return self.summarize(reviews=reviews)
-
-summarizer = ReviewSummarizer()
-summarizer.load(path=OPTIMIZED_PATH)
-
-def summarize_reviews_sync(reviews_md: str) -> str:
-    """Call the DSPy summarizer synchronously."""
-    result = summarizer(reviews=reviews_md)
-    return result.summary
 
 @router.post("/summarize", response_model=SummarizeResponse, tags=["summarize"])
 async def summarize_reviews(request: SummarizeRequest) -> SummarizeResponse:
