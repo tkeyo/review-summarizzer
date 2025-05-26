@@ -1,4 +1,4 @@
-# Review Summarizer MVP
+# Review Summarizzer MVP
 
 A production-ready FastAPI web service that summarizes user reviews using a Large Language Model (LLM) via [DSPy](https://github.com/stanfordnlp/dspy). This project is designed for clarity, modularity, and ease of use, making it ideal for learning and extension.
 
