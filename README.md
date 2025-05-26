@@ -24,6 +24,9 @@ A production-ready FastAPI web service that summarizes user reviews using a Larg
 - **Modular Design:** Clean separation of API, logic, and configuration.
 - **Type Safety:** Uses Pydantic models for request/response validation.
 - **Test Coverage:** Includes example tests for endpoints.
+- **Docker Support:** Containerized deployment with Docker.
+- **Prompt Management:** Organized prompt templates for LLM interactions.
+- **Experiment Tracking:** Dedicated space for experimental code and notebooks.
 
 ---
 
@@ -31,15 +34,21 @@ A production-ready FastAPI web service that summarizes user reviews using a Larg
 
 ```
 app/
-  main.py           # FastAPI app initialization and router inclusion
-  signatures.py     # DSPy signature for summarization
-  routers/
-    health.py       # /health endpoint
-    summarize.py    # /summarize endpoint (LLM logic)
-requirements.txt    # Python dependencies
-README.md           # Project documentation
-.env                # (Not committed) API keys and secrets
-/tests              # Pytest-based unit tests
+├── main.py              # FastAPI app initialization and router inclusion
+├── llm/
+│   ├── review_summarizer.py  # DSPy-based review summarization logic
+│   └── language.py          # Language-related utilities
+└── routers/
+    ├── health.py           # /health endpoint
+    └── summarize.py        # /summarize endpoint (API routes)
+prompt/                    # Prompt templates and configurations
+experiments/              # Experimental code and notebooks
+tests/                    # Pytest-based unit tests
+requirements.txt          # Python dependencies
+Dockerfile               # Container configuration
+Makefile                 # Build and development commands
+README.md                # Project documentation
+.env                     # (Not committed) API keys and secrets
 ```
 
 ---
@@ -49,7 +58,7 @@ README.md           # Project documentation
 1. **Clone the repository:**
    ```bash
    git clone <your-repo-url>
-   cd cursor-test
+   cd review-summarizzer
    ```
 2. **Create and activate a virtual environment:**
    ```bash
@@ -59,8 +68,6 @@ README.md           # Project documentation
 3. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
-   # Or, for development:
-   pip install fastapi uvicorn pytest python-dotenv dspy
    ```
 4. **Set up environment variables:**
    - Create a `.env` file in the project root:
@@ -68,6 +75,12 @@ README.md           # Project documentation
      OPENAI_API_KEY=sk-...YOUR-API-KEY-HERE...
      ```
    - **Never commit your real API keys to version control!**
+
+5. **Using Docker (optional):**
+   ```bash
+   docker build -t review-summarizzer .
+   docker run -p 8000:8000 review-summarizzer
+   ```
 
 ---
 
@@ -184,3 +197,15 @@ def test_summarize_reviews():
 
 ## License
 MIT License 
+
+## Development
+
+The project includes a `Makefile` with common development commands:
+
+```bash
+make install    # Install dependencies
+make test      # Run tests
+make lint      # Run linting
+make format    # Format code
+make clean     # Clean up cache files
+``` 
