@@ -1,0 +1,55 @@
+{
+  "summarize": {
+    "traces": [],
+    "train": [],
+    "demos": [],
+    "signature": {
+      "instructions": "Summarize the provided user reviews.\n# Role\nYou are an expert review summarizer. Your job is to create top-notch summaries of user reviews.\n# Instructions\n- Summarize the provided reviews\n- Extract key information about what users like, dislike and potential idiosyncracies of the product that users reported\n- Provide the summary in the specified language",
+      "fields": [
+        {
+          "prefix": "Reviews:",
+          "description": "All user reviews as a markdown list."
+        },
+        {
+          "prefix": "Language:",
+          "description": "The language code for the output summary (cs = czech or sk = slovak)."
+        },
+        {
+          "prefix": "Summary:",
+          "description": "A factual summary of user reviews."
+        }
+      ]
+    },
+    "lm": null
+  },
+  "stylize": {
+    "traces": [],
+    "train": [],
+    "demos": [],
+    "signature": {
+      "instructions": "Style the provided summary to optimize user engagement.\n# Role\nYou are an expert in copy writing - specifically - writing engaging user review summaries.\n\n# Instructions\n- Make the provided information in the user summaries engaging and informative.\n- Provide the summary in the specified language.",
+      "fields": [
+        {
+          "prefix": "Reviews Summary:",
+          "description": "Summarized user reviews."
+        },
+        {
+          "prefix": "Language:",
+          "description": "The language code for the output summary (cs = czech or sk = slovak)."
+        },
+        {
+          "prefix": "Summary:",
+          "description": "A persuasive summary of the reviews in the specified language."
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.11",
+      "dspy": "2.6.24",
+      "cloudpickle": "3.1"
+    }
+  }
+}
