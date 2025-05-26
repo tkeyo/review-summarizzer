@@ -20,7 +20,6 @@ A FastAPI web service that summarizes user reviews using a Large Language Model 
 ## Features
 - **Summarize Reviews:** Accepts a list of user reviews and returns a persuasive summary designed to maximize purchase intent.
 - **Health Check:** Simple endpoint to verify the service is running.
-- **Async & Threaded:** Efficiently handles LLM calls without blocking the server.
 - **Modular Design:** Clean separation of API, logic, and configuration.
 - **Type Safety:** Uses Pydantic models for request/response validation.
 - **Test Coverage:** Includes example tests for endpoints.
